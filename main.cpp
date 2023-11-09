@@ -3,12 +3,11 @@
 int main(){
     
     importer loater;
-    loater.getnumarray("../prog1_resource/500.in");
-    loater.printarrays();
+    loater.getnumarray("../prog1_resource/12.in"); // 0.65sec
+    // loater.printarrays();
     cout<<"\n=================="<<endl;
-    loater.adjustdata(0);
-    loater.printarrays();
-    cout<<endl;
-    loater.resultable();
+    // loater.adjustdata(0);
+    // loater.printarrays();
+    loater.resultable();    
     return 0;
 }
