@@ -12,7 +12,6 @@ public:
     int sizer = 0;
     int* linetable;
     importer();
-    // ~importer(){ delete [] linetable;}
     vector<int> array1,array2;
     vector< vector<int> > linkline;
     unordered_map<int,int> map1,map2;
@@ -62,11 +61,10 @@ inline void importer::getnumarray(string filename)
             // array2.push_back(loader2);
             // handler>>linkline[i][0]>>linkline[i][1];            
         }
-        for (int i = 0; i < sizer; i++)
-        {
-            cout<<i<<" : "<<array1[i]<<endl;
-        }
-        cout<<"pass!"<<endl;
+        // for (int i = 0; i < sizer; i++)
+        // {
+        //     cout<<i<<" : "<<array1[i]<<endl;
+        // }
         handler.close();
     }
     else cout<<"noting open!";    
@@ -103,8 +101,9 @@ inline void importer::resultable(){
     MPS mps(sizer);
     mps.maxplannersubproblem_1d(0,sizer,array1);
     // mps.maxplannersubproblem(0,sizer,linkline);
-    mps.printmaxsheet(sizer);
-    cout<<" max = "<<mps.maxchord;
+    // mps.printmaxsheet(sizer);
+    cout<<"\nmax = "<<mps.maxchord;
+    mps.routeing(array1);
     return;
 }
 

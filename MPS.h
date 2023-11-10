@@ -9,13 +9,13 @@ class MPS
 {
 public:
     MPS(int circlesize);
-    // ~MPS();
-    int maxchord = 0;
-    int sizer = 0;
+    // ~MPS(){ delete lastarray;}
+    int maxchord = 0,sizer = 0;
+    // int *lastarray;
     vector< vector<int> > chordtable, routetable; //seted all element to 0
     void printmaxsheet(int circlesize);
     int maxplannersubproblem_1d(int i,int j, vector<int > linkline);
-    int linkchord_1d(int j,vector< int > linkline);
+    void routeing( vector< int > linkline);
 
     int maxplannersubproblem(int i,int j, vector< vector<int> > linkline);
     int linkchord(int j,vector< vector<int> > linkline);
@@ -25,8 +25,13 @@ MPS::MPS(int circlesize)
 {
     sizer = circlesize;
     vector< vector<int> > buffer(circlesize, vector<int> (circlesize,0));
+    // lastarray = new int(sizer);
     chordtable = buffer;
-    routetable = buffer;
+    routetable = buffer; // cout<<"lastarray: ";
+    // for (int i = 0; i < sizer; i++)
+    // {
+    //     lastarray[i] = 0;
+    // }
 }
 
 inline void MPS::printmaxsheet(int circlesize)
@@ -41,10 +46,10 @@ inline void MPS::printmaxsheet(int circlesize)
         cout<<endl;
     }
     cout<<"route table:\n";
-      for (int i = 0; i < circlesize-1; i++)
+      for (int i = 0; i < circlesize; i++)
     {
         cout<<"i = "<<i<<" :: ";
-        for (int j = 0; j < circlesize-1; j++)
+        for (int j = 0; j < circlesize; j++)
         {
             cout<<routetable[i][j]<<" ";
         }
@@ -69,29 +74,60 @@ inline int MPS::maxplannersubproblem_1d(int i, int j, vector<int> linkline)
             if (k == row)
             {
                 chordtable[row][row+col] = chordtable[row+1][row+col-1]+1;
-                routetable[row][row+col-1] = 1;
+                routetable[row][row+col] = 1;
             }
             //case 2 j = i+1,and k is not i
             else if( col == 1)
             {
                 chordtable[row][row + col] = 0;
-                routetable[row][row+col-1] = 2;
+                routetable[row][row+col] = 2;
             }
             //case 4: k is out of [i,j]
             else if ( k < row || k > col+row)
             {
                 chordtable[row][row+col] = chordtable[row][row+col-1];
-                routetable[row][row+col-1] = 4;
+                routetable[row][row+col] = 4;
             }
-            //case 3 k in [i,j]
+            //case 3,5 k in [i,j]
             else{                
                 chordtable[row][row+col] = max(chordtable[row][row+col-1],(chordtable[row][k-1] + chordtable[k+1][row+col-1] + 1));
-                routetable[row][row+col-1] = 3;
+                // the route is on count(optimize)
+                if ( ((chordtable[row][row+col] == chordtable[row][row+col-1] + 1 )
+                            &&routetable[row][row+col-1] == 3 ) || row+col == sizer-1)
+                {
+                   routetable[row][row+col] = 5;  
+                }
+                // case 3 the one is noet optimize but count
+                else
+                {
+                   routetable[row][row+col] = 3; 
+                }
             }
         }   
     }
     maxchord = chordtable[0][sizer-1];
     return 0;
+}
+
+inline void MPS::routeing( vector<int > linkline)
+{
+    cout<<"\nroutable[0][i]: "<<endl;
+    for (int iter = 0; iter < sizer; iter++)
+    {
+        cout<<chordtable[0][iter]<<" ";
+        // cout<<routetable[0][iter]<<" ";
+    }
+    cout<<endl;
+    int i = 0;
+    for (int iter = 0; iter < sizer; iter++)
+    {
+        if ( routetable[0][iter] == 1 || routetable[0][iter] == 5 ||
+                (routetable[0][iter] == 3 && routetable[0][iter+1] == 5))
+        {
+            cout<<i++<<" "<<linkline[iter]<<" "<<iter<<endl;
+        }
+    }    
+    return;
 }
 
 // not finished!!!!!
