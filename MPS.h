@@ -114,7 +114,7 @@ inline void MPS::routeing( vector<int > linkline)
     cout<<"\nroutable[0][i]: "<<endl;
     for (int iter = 0; iter < sizer; iter++)
     {
-        cout<<chordtable[0][iter]<<" ";
+        cout<<iter <<": "<<chordtable[0][iter]<<"\n";
         // cout<<routetable[0][iter]<<" ";
     }
     cout<<endl;
