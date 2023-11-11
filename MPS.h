@@ -12,13 +12,12 @@ public:
     // ~MPS(){ delete lastarray;}
     int maxchord = 0,sizer = 0;
     // int *lastarray;
+    vector<int> lastarray;
     vector< vector<int> > chordtable, routetable; //seted all element to 0
     void printmaxsheet(int circlesize);
-    int maxplannersubproblem_1d(int i,int j, vector<int > linkline);
-    void routeing( vector< int > linkline);
-
-    int maxplannersubproblem(int i,int j, vector< vector<int> > linkline);
-    int linkchord(int j,vector< vector<int> > linkline);
+    void maxplannersubproblem_1d(int i,int j, vector<int > linkline);
+    void routeing(int i,int j, vector< int > linkline);
+    // void 
 };
 
 MPS::MPS(int circlesize)
@@ -59,16 +58,13 @@ inline void MPS::printmaxsheet(int circlesize)
     return;
 }
 
-inline int MPS::maxplannersubproblem_1d(int i, int j, vector<int> linkline)
+inline void MPS::maxplannersubproblem_1d(int i, int j, vector<int> linkline)
 {
-    // j's pair
-    int k = 0;
+    int k = 0; // k is j's pair
     for (int col = 1; col < sizer; col++) //j = row + col
     {
-        // cout<<" col = "<<col<<endl;
         for (int row = 0; row < sizer-col; row++) //i
         {
-            // k = linkchord(row+col,linkline);
             k = linkline[row+col];
             //case 1: [i,j] = [k,j]
             if (k == row)
@@ -91,13 +87,12 @@ inline int MPS::maxplannersubproblem_1d(int i, int j, vector<int> linkline)
             //case 3,5 k in [i,j]
             else{                
                 chordtable[row][row+col] = max(chordtable[row][row+col-1],(chordtable[row][k-1] + chordtable[k+1][row+col-1] + 1));
-                // the route is on count(optimize)
-                if ( ((chordtable[row][row+col] == chordtable[row][row+col-1] + 1 )
-                            &&routetable[row][row+col-1] == 3 ) || row+col == sizer-1)
+                //case 5: use previous
+                if (chordtable[row][row+col-1]<(chordtable[row][k-1] + chordtable[k+1][row+col-1] + 1) )
                 {
                    routetable[row][row+col] = 5;  
                 }
-                // case 3 the one is noet optimize but count
+                // case 3: the one is noet optimize but count
                 else
                 {
                    routetable[row][row+col] = 3; 
@@ -106,113 +101,21 @@ inline int MPS::maxplannersubproblem_1d(int i, int j, vector<int> linkline)
         }   
     }
     maxchord = chordtable[0][sizer-1];
-    return 0;
-}
-
-inline void MPS::routeing( vector<int > linkline)
-{
-    cout<<"\nroutable[0][i]: "<<endl;
-    for (int iter = 0; iter < sizer; iter++)
-    {
-        cout<<iter <<": "<<chordtable[0][iter]<<"\n";
-        // cout<<routetable[0][iter]<<" ";
-    }
-    cout<<endl;
-    int i = 0;
-    for (int iter = 0; iter < sizer; iter++)
-    {
-        if ( routetable[0][iter] == 1 || routetable[0][iter] == 5 ||
-                (routetable[0][iter] == 3 && routetable[0][iter+1] == 5))
-        {
-            cout<<i++<<" "<<linkline[iter]<<" "<<iter<<endl;
-        }
-    }    
     return;
 }
 
-// not finished!!!!!
-
-//use to return the number of j, which is the linknode of node i
-inline int MPS::linkchord(int j,vector< vector<int> > linkline)
+inline void MPS::routeing(int i,int j, vector<int > linkline)
 {
-    vector<int>::iterator it;
-    // cout<<" j = "<<j<<"\n";
-    // if (j>sizer/2)
-    // {
-     
-        // for (int c = sizer/2-1 ; c > 0; c--)
-        // {
-        //     if ((j == linkline[c][1]))
-        //     {
-        //         return linkline[c][0]; //the c is the location of pair of j
-        //     }
-        //     if ((j == linkline[c][0]))
-        //     {
-        //         return linkline[c][1];
-        //     }
-        // }        
+    if(chordtable[i][j] == 0 || i < 0 || j < 0 ) return;
 
-    // }    
-    // else
-    // {
-        for (int c = 0; c < sizer-1; c++)
-        {
-            if ((j == linkline[c][1]))
-            {
-                return linkline[c][0]; //the c is the location of pair of j
-            }
-            if ((j == linkline[c][0]))
-            {
-                return linkline[c][1];
-            }
-            
-        } 
-    // }    
-    // it = find(linkchord.begin(), linkchord.end(),i);
-    // temp = it-array1.begin();
-    // if ( temp  == size(array1) )
-    // {
-    //     it = find(array2.begin(), array2.end(),i);
-    //     temp = it-array2.begin();
-    //     if (array1[temp] == j) return 1;
-    // }
-    // else if (array2[it-array1.begin()] == j) return 1; 
-    return -1;
-}
-
-//row and col mode not ready
-inline int MPS::maxplannersubproblem(int i, int j, vector<vector<int>> linkline)
-{
-    // j's pair
-    int k = 0;
-    for (int col = 1; col < sizer; col++) //j = row + col
+    else if (routetable[i][j] == 5 || routetable[i][j] ==1)
     {
-        // cout<<" col = "<<col<<endl;
-        for (int row = 0; row < sizer-col; row++) //i
-        {
-            k = linkchord(row+col,linkline);
-            //case 3: [i,j] = [k,j]
-            if (k == row)
-            {
-                chordtable[row][row+col] = chordtable[row+1][row+col-1]+1;
-            }
-            //case 4 j = i+1,and k is not i
-            else if( col == 1)
-            {
-                chordtable[row][row + col] = 0;
-            }
-            //case 1: k is out of [i,j]
-            else if ( k < row || k > col+row)
-            {
-                chordtable[row][row+col] = chordtable[row][row+col-1];
-            }
-            //case 2 k in [i,j]
-            else{
-                
-                chordtable[row][row+col] = max(chordtable[row][row+col-1],(chordtable[row][k-1] + chordtable[k+1][row+col-1] + 1));
-            }
-        }   
+        lastarray.push_back(j);
+        routeing( linkline[j] + 1 , j , linkline );
+        routeing( i , linkline[j] - 1 , linkline );
     }
-    maxchord = chordtable[0][sizer-1];
-    return 0;
+    else{
+        routeing( i , j - 1 , linkline );
+    } 
+    return;
 }

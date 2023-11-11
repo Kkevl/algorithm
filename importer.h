@@ -12,18 +12,16 @@ public:
     int sizer = 0;
     int* linetable;
     importer();
-    vector<int> array1,array2;
+    vector<int> array1,firstendpointarray;
     vector< vector<int> > linkline;
     unordered_map<int,int> map1,map2;
     void printsize(){cout<<sizer;}
     void getnumarray(string filename);
     void printarrays();
     void resultable();
-
-
-    void sortdata();
-    void quicksorter(vector< vector<int> > linklineq, int start,int end);
-    int partion(vector< vector<int> > linklinep, int p,int r);
+    // void sortdata(int asizer,vector<int> sortarray);
+    // void quicksorter(vector< int > linklineq, int start,int end);
+    // int partion(vector< int > linklinep, int p,int r);
 };
 
 inline importer::importer()
@@ -73,16 +71,8 @@ inline void importer::getnumarray(string filename)
     return;
 }
 
-inline void importer::printarrays(){
-    // for (int i = 0; i < sizer/2; i++)
-    // {
-    //     cout<<array1[i]<<" ";
-    // }
-    // cout<<"\narray2: \n";
-    // for (int i = 0; i < sizer/2; i++)
-    // {
-    //     cout<<array2[i]<<" ";
-    // }    
+// for debug usage
+inline void importer::printarrays(){  
     cout<<"linkline :\n";
     for (int i = 0; i < sizer/2; i++)
     {
@@ -93,49 +83,54 @@ inline void importer::printarrays(){
 }
 
 inline void importer::resultable(){
-    alloccater tabler(sizer);
-    // tabler.maxpanersubset(sizer,array1,array2);
-    // tabler.maxpanersubset_2dv(sizer,map1);//linkline);
-    // tabler.printmaxsheet(sizer);
-    // cout<<" max = "<<tabler.chordtable[0][sizer-1];
     MPS mps(sizer);
     mps.maxplannersubproblem_1d(0,sizer,array1);
-    // mps.maxplannersubproblem(0,sizer,linkline);
-    // mps.printmaxsheet(sizer);
     cout<<"\nmax = "<<mps.maxchord;
-    mps.routeing(array1);
-    return;
-}
+    mps.routeing(0,sizer-1,array1);
 
-
-
-
-//unused
-inline void importer::sortdata(){
-    quicksorter(linkline,0,sizer-1);
-    return;
-}
-
-inline void importer::quicksorter(vector<vector<int>> linklineq, int start, int end)
-{
-    if(start<end){
-        int q = partion(linklineq,start,end);
-        quicksorter(linklineq,start,q-1);
-        quicksorter(linklineq,q+1,end);
-    }
-}
-
-inline int importer::partion(vector< vector<int> > linklinep, int p, int r)
-{
-    int i = p - 1;
-    int x = linklinep[r][0];
-    for (int j = p; j < r; j++)
+    // printing out 
+    cout<<"\nChords: \n";
+    for (int i = mps.lastarray.size()-1 ; i>=0 ; i--)
     {
-        if (linklinep[j][0] <= x)
-        {
-            swap< vector<int> >(linklinep[++i],linklinep[j]);
-        }
+        firstendpointarray.push_back(array1[mps.lastarray[i]]);
     }
-    swap< vector<int> >(linklinep[++i],linklinep[r]);
-    return 0;
+    
+    sort(firstendpointarray.begin(),firstendpointarray.end());
+    for (int i = 0; i < firstendpointarray.size(); i++)
+    {
+        cout<<i<<" :"<<firstendpointarray[i]<<" "<<array1[firstendpointarray[i]]<<endl;
+    }
+    
+
+    return;
 }
+
+// //unused
+// inline void importer::sortdata(int asizer,vector<int> sortarray){
+//     quicksorter(sortarray,0,asizer-1);
+//     return;
+// }
+
+// inline void importer::quicksorter(vector< int > linklineq, int start, int end)
+// {
+//     if(start<end){
+//         int q = partion(linklineq,start,end);
+//         quicksorter(linklineq,start,q-1);
+//         quicksorter(linklineq,q+1,end);
+//     }
+// }
+
+// inline int importer::partion(vector< int > linklinep, int p, int r)
+// {
+//     int i = p - 1;
+//     int x = linklinep[r];
+//     for (int j = p; j < r; j++)
+//     {
+//         if (linklinep[j] <= x)
+//         {
+//             swap< int >(linklinep[++i],linklinep[j]);
+//         }
+//     }
+//     swap< int >(linklinep[++i],linklinep[r]);
+//     return 0;
+// }
