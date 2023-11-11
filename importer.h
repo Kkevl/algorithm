@@ -9,12 +9,12 @@ using namespace std;
 class importer
 {
 public:
-    int sizer = 0;
+    int sizer = 0,maxchord = 0;
     int* linetable;
     importer();
     vector<int> array1,firstendpointarray;
     vector< vector<int> > linkline;
-    unordered_map<int,int> map1,map2;
+    // unordered_map<int,int> map1,map2;
     void printsize(){cout<<sizer;}
     void getnumarray(string filename);
     void printarrays();
@@ -43,7 +43,7 @@ inline void importer::getnumarray(string filename)
     // linkline = bufferpair;
     // linetable = new int(sizer);
 
-    cout<<sizer<<endl;
+    // cout<<sizer<<endl;
     if(handler.is_open()){
         for (int iter = 0; iter < sizer/2; iter++)
         {
@@ -65,9 +65,11 @@ inline void importer::getnumarray(string filename)
         // }
         handler.close();
     }
-    else cout<<"noting open!";    
-    
-    
+    else{
+        cout << "Error: the input file is not opened!!" << endl;
+        cout << "Usage: ./[exe] [input file] [output file]" << endl;
+        exit(1);
+    }   
     return;
 }
 
@@ -85,21 +87,19 @@ inline void importer::printarrays(){
 inline void importer::resultable(){
     MPS mps(sizer);
     mps.maxplannersubproblem_1d(0,sizer,array1);
-    cout<<"\nmax = "<<mps.maxchord;
     mps.routeing(0,sizer-1,array1);
-
+    maxchord = mps.maxchord;
     // printing out 
-    cout<<"\nChords: \n";
     for (int i = mps.lastarray.size()-1 ; i>=0 ; i--)
     {
         firstendpointarray.push_back(array1[mps.lastarray[i]]);
     }
     
     sort(firstendpointarray.begin(),firstendpointarray.end());
-    for (int i = 0; i < firstendpointarray.size(); i++)
-    {
-        cout<<i<<" :"<<firstendpointarray[i]<<" "<<array1[firstendpointarray[i]]<<endl;
-    }
+    // for (int i = 0; i < firstendpointarray.size(); i++)
+    // {
+    //     cout<<i<<" :"<<firstendpointarray[i]<<" "<<array1[firstendpointarray[i]]<<endl;
+    // }
     
 
     return;
@@ -110,7 +110,7 @@ inline void importer::resultable(){
 //     quicksorter(sortarray,0,asizer-1);
 //     return;
 // }
-
+//
 // inline void importer::quicksorter(vector< int > linklineq, int start, int end)
 // {
 //     if(start<end){
@@ -119,7 +119,7 @@ inline void importer::resultable(){
 //         quicksorter(linklineq,q+1,end);
 //     }
 // }
-
+//
 // inline int importer::partion(vector< int > linklinep, int p, int r)
 // {
 //     int i = p - 1;

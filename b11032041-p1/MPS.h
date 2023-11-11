@@ -21,15 +21,11 @@ MPS::MPS(int circlesize)
 {
     sizer = circlesize;
     vector< vector<int> > buffer(circlesize, vector<int> (circlesize,0));
-    // lastarray = new int(sizer);
     chordtable = buffer;
-    routetable = buffer; // cout<<"lastarray: ";
-    // for (int i = 0; i < sizer; i++)
-    // {
-    //     lastarray[i] = 0;
-    // }
+    routetable = buffer;
 }
 
+//debug use
 inline void MPS::printmaxsheet(int circlesize)
 {
     for (int i = 0; i < circlesize; i++)
@@ -101,6 +97,7 @@ inline void MPS::maxplannersubproblem_1d(int i, int j, vector<int> linkline)
     return;
 }
 
+//this function is for printing out the chords' points
 inline void MPS::routeing(int i,int j, vector<int > linkline)
 {
     if(chordtable[i][j] == 0 || i < 0 || j < 0 ) return;
