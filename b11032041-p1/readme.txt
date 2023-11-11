@@ -1,12 +1,12 @@
 1. 學號：b11032041
-2. 姓名：
+2. 姓名：譚凱文
 3. 使用之程式語言：C++
 4. 使用之編譯平台：Linux GNU g++
 5. 檔案壓縮方式: tar zcvf b11032041-p1.tgz b11032041-p1
 6. 各檔案說明：
 	b11032041-p1/main.cpp	: 主程式source code
 	b11032041-p1/mps.h  	: header file 
-	b11032041-p1/mps.cpp  	: cpp file
+	b11032041-p1/importer.h: file use to import the file and load data
   	b11032041-p1/Makefile	: Makefile
 	b11032041-p1/readme.txt	: 本檔案
 7. 編譯方式說明：        	
